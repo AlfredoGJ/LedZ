@@ -4,28 +4,33 @@
 
 
 import streams
-import LedMatrix
+import ws2812_matrix
 
 streams.serial()
 
 led_pin = D8                      # this should match the data pin of the LED strip
-switch_pin = D2                   # this should match the pin to which the button is connected
 
 rows = 10
 cols = 10
         
-matrix = LedMatrix.Matrix(led_pin, rows, cols)
-matrix.clear()
-matrix.on()
-sleep(500)
-matrix.setall(0,0,200)
-matrix.on()
-sleep(500)
-matrix.set(1,6,(200,0,0))
+matrix = ws2812_matrix.matrix(led_pin, rows, cols, True)
 matrix.brightness(0.4)
 matrix.on()
 
+flag = False
 while True:
-   matrix.lshift()
-   matrix.on()
-   sleep(100)
+    
+    if flag:
+        color =(0,220,0)
+        flag = False
+    else:
+        color =(225,0,0)
+        flag = True
+        
+    for i in range(cols):
+        for j in range(rows):
+            matrix.set(j,i,color)
+   
+            matrix.on()
+            sleep(20)
+    
